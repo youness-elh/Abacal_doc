@@ -4,15 +4,22 @@ import subprocess
 import time
 import config as cfg
 
+####################################
+##############Inputs################
+####################################
 directory = cfg.directories["main"]
-script = 'code/extraction_module_new'
-script_path = os.path.join(directory,script)#'//isi/w/elh/Optimizer_tool/code/extraction_module.py'
-comments_file = os.path.join(directory,'state.txt')
+#Abaqus post processing
+Postprocessing = cfg.directories['modules']['Postprocessing_module']
+Postprocessing_path = os.path.join(directory,Postprocessing)
+
+#state file and profile files
+state_file = cfg.output['state_file']
+state_file = os.path.join(directory,state_file)
 
 def wait_step(text,keyword='end now'):
 	print('\n \t Waiting for extraction to be done! Check state.txt for details!!! \n')	
 	while (keyword not in str(text[-1])):
-		oldfile = open(comments_file,'r+')
+		oldfile = open(state_file,'r+')
 		text = oldfile.readlines()
 		#print(str(text[-1]))
 		#print('\n \t Waiting for extraction to be done! Check state.txt for details!!! \n')	
@@ -20,10 +27,10 @@ def wait_step(text,keyword='end now'):
 		oldfile.close()
 		
 print('\n---------------Ongoing extraction of temperature profiles----------------------- \n' )
-oldfile = open(comments_file,'r+')
+oldfile = open(state_file,'r+')
 text = oldfile.readlines()
 if 'start now' in str(text[-1]):
-	subprocess.call(['abaqus_2019 viewer noGUI='+str(script_path) ],shell=True)
+	subprocess.call(['abaqus_2019 viewer noGUI='+str(Postprocessing_path) ],shell=True)
 oldfile.close()
 ##wait
 wait_step(text)

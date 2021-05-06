@@ -18,48 +18,66 @@ start_time = time.time()
 directory = cfg.directories["main"]
 
 #abaqus script
-odb_dir = 'test'
+odb_dir = cfg.directories['odb_folder']
 path_odb_dir = os.path.join(directory,odb_dir)
 
-scripts = 'code'
+scripts = cfg.directories['code_folder']
 script_path = os.path.join(directory,scripts)
-#results
-results = os.path.join(directory,'results')
-#path to simulation output
-report_file= os.path.join(directory,"T_t extraction.txt")#'T_t extraction.txt') #exporting data to a created text file
+
+results_folder =cfg.directories['results_folder']
+results = os.path.join(directory,results_folder)
+#########################################################################
+###############################modules###################################
+#########################################################################
+
+#update module
+update_module = cfg.directories['modules']['update_module']
+update_path = os.path.join(directory,update_module)
+
+#visualization module
+Plot_module = cfg.directories['modules']['Plot_module']
+Plot_path = os.path.join(directory,Plot_module)
+
+#visualization module
+Abaqus_module = cfg.directories['modules']['Abaqus_module']
+Abaqus_path = os.path.join(directory,Abaqus_module)
+
 #extraction of profiles
-extract = 'code/extraction_module_new'
-extract_path = os.path.join(directory,extract)
-#state file
-state_file = os.path.join(directory,"state.txt")
+Extract = cfg.directories['modules']['extraction_module']
+Extract_path = os.path.join(directory,Extract)
+###########################################################################
+###########################################################################
 
-#path to simulation for step 1&2 to calculate the first gradient estimation
-step1_profile_file = os.path.join(directory,"Initial_data/step1_Q1000.txt")
-step2_profile_file = os.path.join(directory,"Initial_data/step2_Q10000.txt")
-#values of heat intensity for step 1&2
-Q_step1 = np.array([1000.0,1.,2.5])
-Q_step2 = np.array([10000.0,1.,5.])
-nb_col_profiles =cfg.post_Abaqus["extracted_collumns"]+3#number of evaluated degrees+3
+#state file and profile files
+state_file = cfg.output['state_file']
+state_file = os.path.join(directory,state_file)
+
+#path to simulation output
+profiles_file = cfg.output['export_file']
+report_file= os.path.join(directory,profiles_file)#exporting data to a created text file
+
+#values of parameters for step 1&2
+Q_step1 = cfg.Gradient_algo['Q_0']
+Q_step2 = cfg.Gradient_algo['Q_1']
+
+nb_col_profiles =cfg.post_Abaqus["extracted_columns"]+3#number of evaluated degrees+3
 #path to the target profiles
-targets_file = os.path.join(directory,"Initial_data/target_ref.txt")
+targets_file = cfg.directories['target_file']
+targets_file = os.path.join(directory,targets_file)
 
 ######################################################################
-############## load inputs containing the T-t profiles  ##############
+############## load inputs containing the target T-t profiles  ##############
 ######################################################################
+def Load_profile(targets_file,nb_col_profiles):
+	Targets = np.loadtxt(targets_file,delimiter=",")
+	Targets = Targets[:,:nb_col_profiles]
+	return Targets
 
-#Profiles = np.loadtxt(report_file,delimiter=",")		
-#nb_col_profiles =370 #Profiles.shape[1]#
-profiles_step1 = np.loadtxt(step1_profile_file,delimiter=",")#
-profiles_step1 = profiles_step1[:,:nb_col_profiles]
-
-print('\n------checking shapes---------\n')
-print(profiles_step1.shape)
-profiles_step2 = np.loadtxt(step2_profile_file,delimiter=",")
-profiles_step2 = profiles_step2[:,:nb_col_profiles]
-print(profiles_step2.shape)
-Targets = np.loadtxt(targets_file,delimiter=",")
-Targets = Targets[:,:nb_col_profiles]
-print(Targets.shape)
+Targets = Load_profile(targets_file,nb_col_profiles)
+print('\nThe target profile has the following shape: \
+'+str(Targets.shape)+'.\nThe lines representing different position of measurements!\n\
+The first 3 columns representing the temperature measurements coordinates!\
+\nThe other columns representing the temperature value for different time frames!\n')
 
 ###########################################################
 ############ Loss function and its gradient ###############
@@ -71,7 +89,7 @@ def profile_target_L2(profile,target):
 	
     output = profile - target
     output = output**2
-    output = 1*np.sum(output)#/(nb_col_profiles-3) #rectangle rule (width = 1 degree)
+    output = 1*np.sum(output)#rectangle rule (width = 1 degree)
     return output
 
 def Loss(Q,profile,target,penalisation1=1e-30):#penalisation can be also an array for multi parameters regulation
@@ -90,23 +108,28 @@ def modify_Q_in_f(Q):
 	if type(Q) != int:
 		Q = unpackarraytostring(Q)
 	Q = str(Q)
-	subprocess.call('python '+script_path+'/change_parameters.py '+Q,shell=True)
+	subprocess.call('python '+update_path+' '+Q,shell=True)
+
+def test():
+	#should include the error msg for number of parameters!
+	modify_Q_in_f(np.array([1000.0,1.,1.,1.,1.]))
+#test()
 
 def plot_profile(Q):
 	if type(Q) != int:
 		Q = unpackarraytostring(Q,'_')
 		Q = Q[:-1]
 	Q = str(Q)
-	subprocess.call('python '+script_path+'/plot_T-t_profiles.py '+Q,shell=True)
+	subprocess.call('python '+Plot_path+' '+Q,shell=True)
 	
 def Abaqus(Q):
 	modify_Q_in_f(Q)
 	print('--------Abaqus job to submit--------')
-	subprocess.call('python '+script_path+'/Extract.py',shell=True)
+	subprocess.call('python '+Abaqus_path,shell=True)
 	time.sleep(2)
 	
 def Extract(Q):
-	subprocess.call('python '+script_path+'/Extract_profiles.py',shell=True)
+	subprocess.call('python '+Extract_path,shell=True)
 	time.sleep(2)
 	with open(report_file,'r') as f:
 		Profiles = np.loadtxt(f,delimiter=",")
@@ -126,7 +149,7 @@ def get_profiles(Q):
 	
 def Gradient_Loss(Q1,Q2,target,penalisation=1e-30):
 	#calculate profiles using abqus cmd
-	assert (Q1 != Q2).any(), "The initial parameter set should be not the same!"
+	#assert (Q1 != Q2).any(), "The initial parameter set should be not the same!"
 	assert len(Q1) == len(Q2), "The initial values of parameter array for both steps should be the same!"
 	print('\n---------------------------------------------------------------------')
 	print('----------------------Gradient estimation--------------------------')
@@ -145,7 +168,7 @@ def Gradient_Loss(Q1,Q2,target,penalisation=1e-30):
 			Q = Q1.copy()
 			Q[i] = Q2[i] 
 			if Q1[i] == Q2[i]:
-				grad[i]= 0.1
+				grad[i]= 0.01
 			else:
 				Profiles = get_profiles(Q)
 				#Calculate the loss
@@ -153,8 +176,8 @@ def Gradient_Loss(Q1,Q2,target,penalisation=1e-30):
 				grad[i] = loss[i+1]-loss[0]
 				grad[i] /= Q2[i]-Q1[i]
 		
-		grad[0]=grad[0]*1000
-		grad[1:-1]=grad[1:-1]/3000
+		grad[0]=grad[0]*800
+		grad[1:-1]=grad[1:-1]/5000
 		print('The gradient is ',grad)
 		print('The loss is ',loss)
 		
@@ -163,36 +186,32 @@ def Gradient_Loss(Q1,Q2,target,penalisation=1e-30):
 	
 	return grad
 		
-		
-####################################################################
-grad_init = Gradient_Loss(Q_step1,Q_step2,Targets,1e-30)
+	
 
 ######################################################################
 ################ Calculate initial gradient and loss  ################
 ######################################################################
+
+grad_init = Gradient_Loss(Q_step1,Q_step2,Targets,1e-30)
 gradient_init = grad_init
 print("\n")
 print('Initial gradient---------------------------------------> '+str(gradient_init))
-L1 = Loss(Q_step1,profiles_step1,Targets,1e-30)
-L2 = Loss(Q_step2,profiles_step2,Targets,1e-30)
-print("Initial Loss of step 1 and initial Loss of step 2------> "+str(L1)+ " & " +str(L2))
 
-
-print("\n \n---------------------------------------------------")
+print("\n \n-------------------------------------------------")
 print("-------Starting gradient descent algorithm----------")
-print("----------------------------------------------------\n \n")
+print("-------------------------------------------------\n \n")
 ######################################################################
 ################### Algorithm of gradient descent  ###################
 ######################################################################
 
-delta = L2-L1
+delta = -1
 error = 1.
 error_abs = 1
 tol = 1.e-1
 max_iter = 10 # (~20 min per cycle)
 max_iter_step = 24 # 
 step = 1.#np.array([19800,0.5,0.5,0.5,0.5])#################tochange#####################
-Loss_list = [L1,L2]
+Loss_list = []
 Q_list = [Q_step1,Q_step2]
 Profiles_list = [profiles_step1,profiles_step2]
 gradient_list = []
@@ -227,7 +246,8 @@ while ((error_abs > tol) and (iter < max_iter)):
 	#step of descent direction
 	count = 0
 	Q_old = Q_list[-1]
-	delta = L_new - Loss_list[-1]
+	L_old = Loss_list[-1]
+	delta = L_new - L_old 
 	while ((count < max_iter_step)  and (delta >=0)):
 		print('----------------------------------------------------------')
 		print('-----Looking for descent direction for iteration '+str(count+1)+'------')
@@ -237,7 +257,7 @@ while ((error_abs > tol) and (iter < max_iter)):
 		Q = np.minimum(np.maximum(np.array(Q_old) - step*gradient,0.9*np.ones(dimension)),maximum_par)
 		profiles = get_profiles(Q)
 		L_new = Loss(Q,profiles,Targets)
-		delta = L_new - Loss_list[-1]
+		delta = L_new - L_old
 		count +=1
 		#save
 		Q_list.append(Q)

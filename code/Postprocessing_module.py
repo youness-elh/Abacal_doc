@@ -14,8 +14,11 @@ import shutil #deleting a directory
 from numpy import savetxt
 #import subprocess 
 import time
-#import config as cfg
+import os
 
+
+os.chdir('../code')
+import config as cfg
 
 def print_contour(path_destination):
 	session.printToFile(fileName=path_destination, format=PNG, 
@@ -26,14 +29,13 @@ def Extract_profiles(limit=None):
 	###########################################################
 	################## Parameters to set ######################
 	###########################################################
-	directory = "//isi/w/elh/Gradient_descent"#cfg.directories["main"]
-	odb_file ='test/SP013_X6CR.odb'#'Optimizer_tool/test/21L_R60_t15_3d_L19_heat.odb'
+	directory = cfg.directories["main"]
+	odb_file = cfg.directories["odb_file"]
 	stpath = os.path.join(directory,odb_file)
-	#print stpath # display the path
-	export_file = 'T_t extraction.txt'#'Optimizer_tool/T_t extraction.txt'
-	report_file= os.path.join(directory,export_file) #exporting data to a created text file
+	export_file = cfg.output["export_file"]
+	report_file = os.path.join(directory,export_file) #exporting data to a created text file
 	
-	state_file= 'state.txt'#'Optimizer_tool/state.txt'
+	state_file = cfg.output["state_file"]
 	comments_file = os.path.join(directory,state_file)
 	######################################################################
 	############ opening the odb and creating a (y,x) viewport  ##########
@@ -62,18 +64,19 @@ def Extract_profiles(limit=None):
 	print("--------------------------------------------------------------------------------------------------------")
 	print("We will extract data from the step number", len(odb.steps.values())-1," for all its ",Frame, " frames")
 	print("--------------------------------------------------------------------------------------------------------")
-
-	nodes = np.empty([6,3])
+	
+	nb = cfg.post_Abaqus['measurements_number']
+	nodes = np.empty([nb,3])
 				
-	nodes[:,0] = np.array([1,2,3,4,5,6])#np.array([-14.9058,-11.3965,-9.14834,9.14834,11.3965,14.9058])
-	nodes[:,1] = np.ones(6)*-4#np.ones(6)*4.6E-15
-	nodes[:,2] =np.ones(6)*5#np.ones(6)*75.
+	nodes[:,0] = cfg.post_Abaqus['path_x']
+	nodes[:,1] = cfg.post_Abaqus['path_y']
+	nodes[:,2] = cfg.post_Abaqus['path_z']
 
 	print( "\n nodes 0 = \n",nodes)
 		
 	npath = session.Path(name="Path-grid 0 ",type=POINT_LIST,expression=nodes)
 
-	output_all_frames = np.zeros([6,3+Frame])
+	output_all_frames = np.zeros([nb,3+Frame])
 	output_all_frames[:,0:3] = nodes[:,:]
 
 	for Frme in range(Frame):
@@ -108,5 +111,6 @@ def Extract_profiles(limit=None):
 		file.write("---------------------------------end now-----------------------------------------")
 
 if __name__ == "__main__":
-	Extract_profiles(77)
+	extrected_columns = cfg.post_Abaqus['extracted_columns']
+	Extract_profiles(extrected_columns)
 
