@@ -42,13 +42,32 @@ post_Abaqus = {
 }
 
 Gradient_algo = {
-				'Q_0': np.array([1000.0,1.,1.]),
-				'Q_1': np.array([10000.0,2.,2.]),
+				'Q_0': np.array([1000.0,1.]),
+				'Q_1': np.array([5000.0,2.]),
+				'Parameters_interval':{
+						'max':np.array([50000,6,6,6,6]),
+						'min':np.array([1000.,0.8,0.8,0.8,0.8]),
+				},
+				'tolernce': 1.e-1,
+				'max_iter':10,
+				'max_iter_step':24,
+				'step':1.,
 }
 
 
 output=  {
 				'export_file':'T_t extraction.txt',
 				'state_file':'state.txt',
+				'Results':{
+						'Loss_list':'results/Loss_list.txt',
+						'Profiles_list':'results/Loss_list.txt',
+						'Q_list':'results/Q_list.txt',
+						'delta_list':'results/delta_list.txt',
+						'step_list':'results/step_list.txt',
+						'gradient_list':'results/gradient_list.txt',
+						'error_list':'results/error_list.txt',
+						'error_abs_list':'results/error_abs_list.txt',
+				
+				}
 				
 }

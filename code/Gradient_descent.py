@@ -9,6 +9,12 @@ import time
 import matplotlib.pyplot as plt
 import subprocess
 import config as cfg
+'''
+This is a proposed minimization algorithm for the calibration of the heat source parameters i.e Goldak model in the welding process model. 
+The model is simulated by Abaqus CAE and the temperature profiles are driven from the obtained Abaqus odb. 
+The temperature profiles are then compared to to the target profiles and the dependent cost function is minimized using this proposed optimization algorithm. 
+In fact, it is the gradient descent algorithm using the backtracking line search based on the **Armijo_Goldstein condition** in order to determine the step.
+'''
 
 start_time = time.time()
 
@@ -45,6 +51,28 @@ Abaqus_path = os.path.join(directory,Abaqus_module)
 #extraction of profiles
 Extract = cfg.directories['modules']['extraction_module']
 Extract_path = os.path.join(directory,Extract)
+
+#########################################################################
+###############################Results###################################
+#########################################################################
+
+#Loss_list
+Loss_list_path = cfg.output['Results']['Loss_list']
+#Profiles_list
+Profiles_list_path = cfg.output['Results']['Profiles_list']
+#Q_list
+Q_list_path = cfg.output['Results']['Q_list']
+#delta_list
+delta_list_path = cfg.output['Results']['delta_list']
+#step_list
+step_list_path = cfg.output['Results']['step_list']
+#gradient_list
+gradient_list_path = cfg.output['Results']['gradient_list']
+#error_list
+error_list_path = cfg.output['Results']['error_list']
+#error_abs_list
+error_abs_list_path = cfg.output['Results']['error_abs_list']
+
 ###########################################################################
 ###########################################################################
 
@@ -64,6 +92,20 @@ nb_col_profiles =cfg.post_Abaqus["extracted_columns"]+3#number of evaluated degr
 #path to the target profiles
 targets_file = cfg.directories['target_file']
 targets_file = os.path.join(directory,targets_file)
+
+#########################################################################
+#########################Gradient parameters#############################
+#########################################################################
+
+######################################
+tol = cfg.Gradient_algo['tolernce']
+max_iter = cfg.Gradient_algo['max_iter']
+max_iter_step = cfg.Gradient_algo['max_iter_step']
+step = cfg.Gradient_algo['step']
+#####################################
+
+###########################################################################
+###########################################################################
 
 ######################################################################
 ############## load inputs containing the target T-t profiles  ##############
@@ -147,55 +189,103 @@ def get_profiles(Q):
 	profiles = Extract(Q)
 	return profiles
 	
-def Gradient_Loss(Q1,Q2,target,penalisation=1e-30):
+def Loss_calc(Q1,target,penalisation=1e-30):
+	print('\n--------------------------------------------------------------------')
+	print('----------------------Calculation of Loss--------------------------')
+	print('--------------------------------------------------------------------\n')
+	#Calculate the initial Loss (of Q1)
+	profile = get_profiles(Q1)
+	loss = Loss(Q1,profile,target,penalisation)
+	return loss,profile
+	
+#loss_0 = Loss_init(Q_step1,Targets,1e-30)
+#print('the initial loss is=',loss_0)
+
+	
+def Gradient_Loss(L1,Q1,Q2,target,penalisation=1e-30):
 	#calculate profiles using abqus cmd
 	#assert (Q1 != Q2).any(), "The initial parameter set should be not the same!"
 	assert len(Q1) == len(Q2), "The initial values of parameter array for both steps should be the same!"
 	print('\n---------------------------------------------------------------------')
 	print('----------------------Gradient estimation--------------------------')
 	print('----------------------------------------------------------------------\n')
-	if type(Q2) != int:
-		n = len(Q2)
-		grad = np.zeros(n)
-		loss = np.zeros(n+1)
-		#Calculate the initial Loss (of Q1)
-		profile1 = get_profiles(Q1)
-		loss[0] = Loss(Q1,profile1,target,penalisation)
-		#print('the initial loss is=',loss[0])
-		
-		for i in range(n):
-			#run Abqus simulation for each parameter constellation
-			Q = Q1.copy()
-			Q[i] = Q2[i] 
-			if Q1[i] == Q2[i]:
-				grad[i]= 0.01
-			else:
-				Profiles = get_profiles(Q)
-				#Calculate the loss
-				loss[i+1] = Loss(Q,Profiles,target,penalisation)
-				grad[i] = loss[i+1]-loss[0]
-				grad[i] /= Q2[i]-Q1[i]
-		
-		grad[0]=grad[0]*800
-		grad[1:-1]=grad[1:-1]/5000
-		print('The gradient is ',grad)
-		print('The loss is ',loss)
-		
-	else:
-		print('use 1D script')
+
+	n = len(Q2)
+	grad = np.zeros(n)
+	loss = np.zeros(n+1)
+	loss[0] = L1
+	#print('the initial loss is=',loss[0])
+	
+	for i in range(n):
+		#run Abqus simulation for each parameter constellation
+		Q = Q1.copy()
+		Q[i] = Q2[i] 
+		if Q1[i] == Q2[i]:
+			grad[i]= 0.1
+		else:
+			Profiles = get_profiles(Q)
+			#Calculate the loss
+			loss[i+1] = Loss(Q,Profiles,target,penalisation)
+			grad[i] = loss[i+1]-loss[0]
+			grad[i] /= Q2[i]-Q1[i]
+	
+	grad[0]=grad[0]*800
+	grad[1:-1]=grad[1:-1]/5000
+	print('The gradient is ',grad)
+	print('The loss is ',loss)
+
 	
 	return grad
 		
 	
-
+def save_results(Q_list,Loss_list,Profiles_list,step_list,gradient_list,delta_list,error_list,error_abs_list,ok=True):
+	print('----------------------------------------------------')
+	print('----------------Save results on files---------------')
+	print('----------------------------------------------------\n')
+	if ok:
+		file = os.path.join(directory,Q_list_path)
+		with open(file,'w') as f:
+			np.savetxt(f, np.array(Q_list),delimiter=",")
+			
+		file = os.path.join(directory,Loss_list_path)
+		with open(file,'w') as f:
+			np.savetxt(f, np.array(Loss_list),delimiter=",")
+		
+	file = os.path.join(directory,Profiles_list_path)
+	with open(file,'w') as f:
+		np.savetxt(f, np.array(Profiles_list),delimiter=",", fmt='%s')
+	
+	file = os.path.join(directory,gradient_list_path)
+	with open(file,'w') as f:
+		np.savetxt(f, np.array(gradient_list),delimiter=",")
+		
+	file = os.path.join(directory,error_list_path)
+	with open(file,'w') as f:
+		np.savetxt(f, np.array(error_list),delimiter=",")
+		
+	file = os.path.join(directory,delta_list_path)
+	with open(file,'w') as f:
+		np.savetxt(f, np.array(delta_list),delimiter=",")
+		
+	file = os.path.join(directory,step_list_path)
+	with open(file,'w') as f:
+		np.savetxt(f, np.array(step_list),delimiter=",")
+		
+	file = os.path.join(directory,error_abs_list_path)
+	with open(file,'w') as f:
+		np.savetxt(f, np.array(error_abs_list),delimiter=",")
+	
+	print('-------------------------------------------------------------')
+	print('----------results saved in '+str(results)+'---------')
+	print('-------------------------------------------------------------\n')
 ######################################################################
 ################ Calculate initial gradient and loss  ################
 ######################################################################
-
-grad_init = Gradient_Loss(Q_step1,Q_step2,Targets,1e-30)
-gradient_init = grad_init
-print("\n")
-print('Initial gradient---------------------------------------> '+str(gradient_init))
+def grad_init():
+	gradient_init = Gradient_Loss(Q_step1,Q_step2,Targets,1e-30)
+	print("\n")
+	print('Initial gradient---------------------------------------> '+str(gradient_init))
+	return gradient_init
 
 print("\n \n-------------------------------------------------")
 print("-------Starting gradient descent algorithm----------")
@@ -204,44 +294,46 @@ print("-------------------------------------------------\n \n")
 ################### Algorithm of gradient descent  ###################
 ######################################################################
 
-delta = -1
+######################################
+tol = tol
+max_iter = max_iter
+max_iter_step = max_iter_step
+step = step
+#####################################
+
+######################################################################
+#######################Initialization#################################
+######################################################################
 error = 1.
 error_abs = 1
-tol = 1.e-1
-max_iter = 10 # (~20 min per cycle)
-max_iter_step = 24 # 
-step = 1.#np.array([19800,0.5,0.5,0.5,0.5])#################tochange#####################
-Loss_list = []
+iter = 0
+total_iter = 0
 Q_list = [Q_step1,Q_step2]
-Profiles_list = [profiles_step1,profiles_step2]
+L1,profile1 = Loss_calc(Q_list[-2],Targets,1e-30)
+L2,profile2 = Loss_calc(Q_list[-1],Targets,1e-30)
+Loss_list = [L1,L2]
+Profiles_list = [profile1,profile2]
 gradient_list = []
 delta_list = []
 error_list = []
 error_abs_list = []
 step_list = []
-iter = 0
-total_iter = 0
-
 ###########################################################
 ##################adapt to dimension#######################
 ###########################################################
 dimension = len(Q_step1) 
-maximum_par = np.array([50000,6,6,6,6])[:dimension]
+maximum_par = cfg.Gradient_algo['Parameters_interval']['max'][:dimension]
+minimum_par = cfg.Gradient_algo['Parameters_interval']['min'][:dimension]
 while ((error_abs > tol) and (iter < max_iter)):
 		
 	print('-----------------------------------------------------')
 	print('-----------Optimal Q in iteration '+str(iter)+' = '+str(Q_list[-1])+'-----------')
 	print('-----------------------------------------------------\n')
-	if iter ==0:
-		gradient = gradient_init
-	else:
-		gradient =  Gradient_Loss(Q_list[-2], Q_list[-1],Targets,1e-30)
+	gradient =  Gradient_Loss(Loss_list[-2],Q_list[-2], Q_list[-1],Targets,1e-30)
 	print('----------------------',gradient)
-	Q = np.minimum(np.maximum(np.array(Q_list[-1]) - step*gradient,0.9*np.ones(dimension)),maximum_par)
+	Q = np.minimum(np.maximum(np.array(Q_list[-1]) - step*gradient,minimum_par),maximum_par)
 	print('-------gradient and step------',gradient,step)
-	profiles = get_profiles(Q)
-	
-	L_new = Loss(Q,profiles,Targets)
+	L_new,profiles = Loss_calc(Q,Targets,1e-30)
 	
 	#step of descent direction
 	count = 0
@@ -254,39 +346,21 @@ while ((error_abs > tol) and (iter < max_iter)):
 		print('----------------------------------------------------------\n')
 
 		step /= 1.3
-		Q = np.minimum(np.maximum(np.array(Q_old) - step*gradient,0.9*np.ones(dimension)),maximum_par)
-		profiles = get_profiles(Q)
-		L_new = Loss(Q,profiles,Targets)
+		Q = np.minimum(np.maximum(np.array(Q_old) - step*gradient,minimum_par),maximum_par)
+		L_new,profiles = Loss_calc(Q,Targets,1e-30)
 		delta = L_new - L_old
 		count +=1
+		
 		#save
-		Q_list.append(Q)
-		Loss_list.append(L_new)
 		delta_list.append(delta)
 		step_list.append(step)
 		Profiles_list.append(profiles)
+		error_abs_list.append(error_abs)
 		
 		#save
-		with open(results+'/Profiles_list.txt','w') as f:
-			np.savetxt(f, np.array(Profiles_list),delimiter=",", fmt='%s')
-		
-		with open(results+'/Loss_list.txt','w') as f:
-			np.savetxt(f, np.array(Loss_list),delimiter=",")
-		
-		with open(results+'/Q_list.txt','w') as f:
-			np.savetxt(f, np.array(Q_list),delimiter=",")
-			
-		with open(results+'/delta_list.txt','w') as f:
-			np.savetxt(f, np.array(delta_list),delimiter=",")
-			
-		with open(results+'/step_list.txt','w') as f:
-			np.savetxt(f, np.array(step_list),delimiter=",")
-			
-		with open(results+'/gradient_list.txt','w') as f:
-			np.savetxt(f, np.array(gradient_list),delimiter=",")
+		save_results(Q_list,Loss_list,Profiles_list,step_list,gradient_list,delta_list,error_list,error_abs_list,False)
 
-
-	total_iter += total_iter+ count + iter
+	total_iter += count + iter
 	#save
 	if count == 0:
 		Q_list.append(Q)
@@ -294,6 +368,10 @@ while ((error_abs > tol) and (iter < max_iter)):
 		Profiles_list.append(profiles)
 		delta_list.append(delta)
 		step_list.append(step)
+	else:
+		Q_list.append(Q)
+		Loss_list.append(L_new)
+		
 		
 	gradient_list.append(gradient)
 
@@ -304,45 +382,18 @@ while ((error_abs > tol) and (iter < max_iter)):
 	error_abs_list.append(error_abs)
 	iter += 1
 	print("For iteration "+str(iter)+" we obtain Q = "+str( Q)+ " with a relative error of "+str(error))
-	print('----------------------------------------------------')
-	print('----------------Save results on files---------------')
-	print('----------------------------------------------------')
-	
-	with open(results+'/Loss_list.txt','w') as f:
-		np.savetxt(f, np.array(Loss_list),delimiter=",")
-		
-	with open(results+'/Q_list.txt','w') as f:
-		np.savetxt(f, np.array(Q_list),delimiter=",")
-		
-	with open(results+'/Profiles_list.txt','w') as f:
-		np.savetxt(f, np.array(Profiles_list),delimiter=",", fmt='%s')
-	
-	with open(results+'/gradient_list.txt','w') as f:
-		np.savetxt(f, np.array(gradient_list),delimiter=",")
-		
-	with open(results+'/error_list.txt','w') as f:
-		np.savetxt(f, np.array(error_list),delimiter=",")
-		
-	with open(results+'/delta_list.txt','w') as f:
-		np.savetxt(f, np.array(delta_list),delimiter=",")
-		
-	with open(results+'/step_list.txt','w') as f:
-		np.savetxt(f, np.array(step_list),delimiter=",")
-		
-	with open(results+'/error_abs_list.txt','w') as f:
-		np.savetxt(f, np.array(error_abs_list),delimiter=",")
-		
-	print('-------------------------------------------------------------')
-	print('----------results saved in '+str(results)+'---------')
-	print('-------------------------------------------------------------\n')
+	#save
+	save_results(Q_list,Loss_list,Profiles_list,step_list,gradient_list,delta_list,error_list,error_abs_list,True)
 
 print('--------------------------------------------------------------------')
 print('----------------------------Done!-----------------------------------')
 print('--------------------------------------------------------------------')
-total_iter=0
+
 #time estimation
 end_time = time.time()
 elapsed_time = end_time - start_time
+print("Elapsed time to converge "+str(elapsed_time)+" seconds in "+str(total_iter)+" total iterations.\
+\n The search for descent direction took "+str(count)+" in " +str(iter)+" main iterations ")
 with open(state_file,'a') as file:
 	file.write('\n-----------------------------------------------------------------------------------------------\n')
 	file.write("Elapsed time to converge "+str(elapsed_time)+" seconds in "+str(total_iter)+" total iterations including search for descent direction and " +str(iter)+" main iterations ")

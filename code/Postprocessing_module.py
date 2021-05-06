@@ -19,6 +19,7 @@ import os
 
 os.chdir('../code')
 import config as cfg
+extrected_columns= cfg.post_Abaqus['extracted_columns']
 
 def print_contour(path_destination):
 	session.printToFile(fileName=path_destination, format=PNG, 
@@ -111,6 +112,6 @@ def Extract_profiles(limit=None):
 		file.write("---------------------------------end now-----------------------------------------")
 
 if __name__ == "__main__":
-	extrected_columns = cfg.post_Abaqus['extracted_columns']
+	extrected_columns = extrected_columns
 	Extract_profiles(extrected_columns)
 
