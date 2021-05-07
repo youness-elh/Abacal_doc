@@ -50,8 +50,10 @@ Gradient_algo = {
 				},
 				'tolernce': 1.e-1,
 				'max_iter':10,
-				'max_iter_step':24,
+				'max_iter_step':10,
 				'step':1.,
+				'regulization':np.array([1e-30,1e-30,1e-30,1e-30,1e-30]),
+				'gradient_scaling':np.array([800,5000,5000,5000,5000]),
 }
 
 
@@ -60,7 +62,7 @@ output=  {
 				'state_file':'state.txt',
 				'Results':{
 						'Loss_list':'results/Loss_list.txt',
-						'Profiles_list':'results/Loss_list.txt',
+						'Profiles_list':'results/Profiles_list.txt',
 						'Q_list':'results/Q_list.txt',
 						'delta_list':'results/delta_list.txt',
 						'step_list':'results/step_list.txt',
