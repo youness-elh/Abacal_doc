@@ -107,12 +107,13 @@ minimum_par = cfg.Gradient_algo['Parameters_interval']['min'][:dimension]
 #########################################################################
 
 ################################################################
-tol = cfg.Gradient_algo['tolernce']
+tol = cfg.Gradient_algo['tolerance']
 max_iter = cfg.Gradient_algo['max_iter']
 max_iter_step = cfg.Gradient_algo['max_iter_step']
 step = cfg.Gradient_algo['step']
 gradient_scaling = cfg.Gradient_algo['gradient_scaling'][:dimension]
 regulization = cfg.Gradient_algo['regulization'][:dimension]
+armijo_step = cfg.Gradient_algo['armijo_step']
 
 ################################################################
 
@@ -291,30 +292,20 @@ def save_results(Q_list,Loss_list,Profiles_list,step_list,gradient_list,delta_li
 	print('-------------------------------------------------------------')
 	print('----------results saved in '+str(results)+'---------')
 	print('-------------------------------------------------------------\n')
-######################################################################
-################ Calculate initial gradient and loss  ################
-######################################################################
+#############################################################
+################ Calculate initial gradient  ################
+#############################################################
 def grad_init():
 	gradient_init = Gradient_Loss(Q_step1,Q_step2,Targets,regulization)
 	print("\n")
 	print('Initial gradient---------------------------------------> '+str(gradient_init))
 	return gradient_init
 
-print("\n \n-------------------------------------------------")
-print("-------Starting gradient descent algorithm----------")
-print("-------------------------------------------------\n \n")
 ######################################################################
 ################### Algorithm of gradient descent  ###################
 ######################################################################
 
-######################################
-tol = tol
-max_iter = max_iter
-max_iter_step = max_iter_step
-step = step
-#####################################
-
-def Gradient_descent(tol,max_iter,max_iter_step,step):
+def Gradient_descent(tol,max_iter,max_iter_step,step,armijo_step):
 	######################################################################
 	#######################Initialization#################################
 	######################################################################
@@ -330,7 +321,7 @@ def Gradient_descent(tol,max_iter,max_iter_step,step):
 	step_list = []
 	######################
 	error = 1.			##
-	error_abs = 1		##
+	error_abs = 1.		##
 	iter = 0			##
 	total_iter = 0		##
 	######################
@@ -358,7 +349,7 @@ def Gradient_descent(tol,max_iter,max_iter_step,step):
 			print('-----Looking for descent direction for iteration '+str(count+1)+'------')
 			print('----------------------------------------------------------\n')
 
-			step /= 1.3
+			step /= armijo_step
 			Q = np.minimum(np.maximum(np.array(Q_old) - step*gradient,minimum_par),maximum_par)
 			L_new,profiles = Loss_calc(Q,Targets,regulization)
 			delta = L_new - L_old
@@ -372,7 +363,8 @@ def Gradient_descent(tol,max_iter,max_iter_step,step):
 			
 			#save
 			save_results(Q_list,Loss_list,Profiles_list,step_list,gradient_list,delta_list,error_list,error_abs_list,False)
-
+		
+		iter += 1
 		total_iter += count + iter
 		#save
 		if count == 0:
@@ -393,11 +385,28 @@ def Gradient_descent(tol,max_iter,max_iter_step,step):
 
 		error_abs = profile_target_L2(profiles,Targets)
 		error_abs_list.append(error_abs)
-		iter += 1
 		print("For iteration "+str(iter)+" we obtain Q = "+str( Q)+ " with a relative error of "+str(error))
 		#save
 		save_results(Q_list,Loss_list,Profiles_list,step_list,gradient_list,delta_list,error_list,error_abs_list,True)
+		
+	return iter,total_iter
 
+print("\n \n-------------------------------------------------")
+print("-------Starting gradient descent algorithm----------")
+print("-------------------------------------------------\n \n")
+##########################################################################
+################### Algorithm of gradient descent  call###################
+##########################################################################
+######################################
+tol = tol						######
+max_iter = max_iter				######
+max_iter_step = max_iter_step	######
+step = step						######
+armijo_step = armijo_step	    ######
+##########################################################################
+iter,total_iter = Gradient_descent(tol,max_iter,max_iter_step,step,armijo_step)  #####
+##########################################################################
+##########################################################################
 print('--------------------------------------------------------------------')
 print('----------------------------Done!-----------------------------------')
 print('--------------------------------------------------------------------')

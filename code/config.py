@@ -42,18 +42,20 @@ post_Abaqus = {
 }
 
 Gradient_algo = {
-				'Q_0': np.array([1000.0,1.]),
-				'Q_1': np.array([5000.0,2.]),
+				'Q_0': np.array([25000.0,1.5]),
+				'Q_1': np.array([26000.0,2.5]),
 				'Parameters_interval':{
 						'max':np.array([50000,6,6,6,6]),
 						'min':np.array([1000.,0.8,0.8,0.8,0.8]),
 				},
-				'tolernce': 1.e-1,
+				'tolerance': 1.e-1,
 				'max_iter':10,
 				'max_iter_step':10,
 				'step':1.,
+				'armijo_step':2.3,
 				'regulization':np.array([1e-30,1e-30,1e-30,1e-30,1e-30]),
-				'gradient_scaling':np.array([800,5000,5000,5000,5000]),
+				'gradient_scaling':np.array([900,5000,5000,5000,5000]),
+				
 }
 
 
