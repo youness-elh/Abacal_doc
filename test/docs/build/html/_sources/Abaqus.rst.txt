@@ -1,0 +1,20 @@
+module package
+==============
+
+Module contents
+---------------
+
+.. automodule:: module.ok
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+moduuuule package
+==============
+Moduuuule contents
+---------------
+
+.. automodule:: Abaqus.ok
+   :members:
+   :undoc-members:
+   :show-inheritance:

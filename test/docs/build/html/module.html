@@ -1,0 +1,1039 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Abacal tool package &#8212; Abacal 0.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Abacal’s documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Abacal’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Abacal 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="abacal-tool-package">
+<h1>Abacal tool package<a class="headerlink" href="#abacal-tool-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-module.config">
+<span id="configuration-module"></span><h2>Configuration module<a class="headerlink" href="#module-module.config" title="Permalink to this headline">¶</a></h2>
+<p>This is where the tool settings are set. Those setting are structured in six groups:</p>
+<ul class="simple">
+<li><p>Input paths</p></li>
+<li><p>Output paths</p></li>
+<li><p>Preprocessing parameters</p></li>
+<li><p>Abaqus inputs</p></li>
+<li><p>Postprocessing parameters</p></li>
+<li><p>Gradient descent algorithm settings</p></li>
+</ul>
+<div class="section" id="paths-of-input-and-ouput-files">
+<h3>Paths of input and ouput files<a class="headerlink" href="#paths-of-input-and-ouput-files" title="Permalink to this headline">¶</a></h3>
+<p>This part of the <cite>config</cite> module has to be ultered when the location of the simulation inputs are changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="o">=</span> <span class="p">{</span>       <span class="s2">&quot;root&quot;</span><span class="p">:</span><span class="s2">&quot;//isi/w/elh/Gradient_descent_config&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;odb_folder&#39;</span><span class="p">:</span><span class="s1">&#39;test&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;code_folder&#39;</span><span class="p">:</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;results_folder&#39;</span><span class="p">:</span><span class="s1">&#39;results&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;odb_file&#39;</span><span class="p">:</span> <span class="s1">&#39;test/SP013_X6CR.odb&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;target_file&#39;</span><span class="p">:</span><span class="s2">&quot;Initial_data/target_ref.txt&quot;</span><span class="p">,</span>
+                <span class="s1">&#39;modules&#39;</span><span class="p">:{</span><span class="s1">&#39;update_module&#39;</span><span class="p">:</span><span class="s1">&#39;code/update_module.py&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Postprocessing_module&#39;</span><span class="p">:</span><span class="s1">&#39;code/Postprocessing_module.py&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Plot_module&#39;</span><span class="p">:</span><span class="s1">&#39;code/Plot_module.py&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;Abaqus_module&#39;</span><span class="p">:</span><span class="s1">&#39;code/Abaqus_module.py&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;extraction_module&#39;</span><span class="p">:</span><span class="s1">&#39;code/Extract_module.py&#39;</span><span class="p">,</span>
+                           <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The same applies to the desired outputs destination in case the user would like to change the path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;export_file&#39;</span><span class="p">:</span><span class="s1">&#39;T_t extraction.txt&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;state_file&#39;</span><span class="p">:</span><span class="s1">&#39;state.txt&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;Results&#39;</span><span class="p">:{</span><span class="s1">&#39;Loss_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/Loss_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;Profiles_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/Profiles_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;Q_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/Q_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;delta_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/delta_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;step_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/step_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;gradient_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/gradient_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;error_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/error_list.txt&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;error_abs_list&#39;</span><span class="p">:</span><span class="s1">&#39;results/error_abs_list.txt&#39;</span><span class="p">,</span>
+                                
+                                <span class="p">}</span>                               
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this Abacal project version the directories have the following structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Abacal</span> <span class="n">project</span>  
+<span class="o">|--</span> <span class="n">Abacal</span> <span class="n">tool</span> <span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">code</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">config</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Gradient_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">update_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Abaqus_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Postprocessing_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Plot_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">test</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">SP013_X6CR</span><span class="o">.</span><span class="n">inp</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">SP013_X6CR</span><span class="o">.</span><span class="n">fem</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">SP013_X6CR</span><span class="o">.</span><span class="n">f</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">WSModell_Kinematic_new</span><span class="o">.</span><span class="n">ssc</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">resulsts</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Q_list</span><span class="o">.</span><span class="n">txt</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Loss_list</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">gradient_list</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">error_list</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">step_list</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="o">...</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">Plots</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">For</span> <span class="n">each</span> <span class="n">iteration</span>
+<span class="o">|</span>       <span class="o">|--</span><span class="n">Readme</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|--</span><span class="n">Abacal</span> <span class="n">tool</span> <span class="n">doc</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">Abacal</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">config</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Gradient_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">update_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Abaqus_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Postprocessing_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">Plot_module</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">img</span>
+<span class="o">|</span>       <span class="o">|</span>       <span class="o">|--</span> <span class="o">...</span>
+<span class="o">|</span>       <span class="o">|--</span> <span class="n">docs</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">build</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">doctrees</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="o">...</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">html</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">index</span><span class="o">.</span><span class="n">html</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="o">...</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="n">source</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">conf</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">_static</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="n">basic</span><span class="o">.</span><span class="n">css</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|</span>   <span class="o">|--</span> <span class="o">...</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="o">|--</span> <span class="o">...</span>
+<span class="o">|</span>       <span class="o">|--</span><span class="n">Readme</span><span class="o">.</span><span class="n">md</span>
+<span class="o">|--</span><span class="n">Readme</span><span class="o">.</span><span class="n">md</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="preprocessing-settings">
+<h3>Preprocessing settings<a class="headerlink" href="#preprocessing-settings" title="Permalink to this headline">¶</a></h3>
+<p>This part of the config file provide the tool with name of the parameters to be updated for each iteration. in order to modify the parameters automatically the script needs the position of the respective parameters in the user subroutine file e.g SP013_X6CR.f.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pre_Abaqus</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;lines_parameters&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="mi">43</span><span class="p">]),</span>
+              <span class="s2">&quot;Parameters_name&quot;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;QT&quot;</span><span class="p">,</span>
+                                  <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;AF&quot;</span><span class="p">,</span>
+                                  <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;AR&quot;</span><span class="p">,</span>
+                                  <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span>
+                                  <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span>
+                                <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The given lines in the <strong>`lines_parameters`</strong> variable has to mention the line in the user subroutine - 1.</p></li>
+<li><p>The variable <strong>`Parameters_name`</strong> can change according to the user subroutine heat source parameters.</p></li>
+</ul>
+</div>
+<div class="section" id="abaqus-processing-settings">
+<h3>Abaqus processing settings<a class="headerlink" href="#abaqus-processing-settings" title="Permalink to this headline">¶</a></h3>
+<p>Those setting are related to the welding process conditions. There are found and ultered when needed in the Abaqus input file e.g SP013_X6CR.inp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Abaqus</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;time&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span>
+          <span class="s2">&quot;speed&quot;</span><span class="p">:</span><span class="mf">5.</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>`time`</strong> variable is indicating the time of the welding simulation</p></li>
+<li><p><strong>`speed`</strong> variable is related to velocity of the moving heat source</p></li>
+</ul>
+</div>
+<div class="section" id="postprocessing-settings">
+<h3>Postprocessing settings<a class="headerlink" href="#postprocessing-settings" title="Permalink to this headline">¶</a></h3>
+<p>Once the simulation is done, the profiles can be extracted from the abaqus model e.g SP013_X6CR.odb via Abaqus viewer using the postprocessing module. the variabes below need to be set adequatly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">post_Abaqus</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;measurements_number&#39;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span>
+               <span class="s2">&quot;extracted_columns&quot;</span><span class="p">:</span><span class="mi">77</span><span class="p">,</span>
+               <span class="s1">&#39;path_x&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span>
+               <span class="s1">&#39;path_y&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">*-</span><span class="mi">4</span><span class="p">,</span>
+               <span class="s1">&#39;path_z&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>measurements_number</strong> is the number of the sensors providing several measurement postions on the model</p></li>
+<li><p><strong>extracted_columns</strong> are the number of frames during which the temperature profile is extracted</p></li>
+<li><p><strong>path_x/y/z</strong> indicates the coordinates of the thermal sensors providing measured temperature</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The path cordinates have to be adapted to the tested model in Abaqus e.g x -&gt; z , y -&gt; x and z becomes y.</p>
+</div>
+</div>
+<div class="section" id="gradient-descent-algorithm-settings">
+<h3>Gradient descent algorithm settings<a class="headerlink" href="#gradient-descent-algorithm-settings" title="Permalink to this headline">¶</a></h3>
+<p>This the key settings of the presented tool. Those values can be kept for the same model but have to be adapted to a new one.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Gradient_algo</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Q_0&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">25000.0</span><span class="p">,</span><span class="mf">1.5</span><span class="p">]),</span>
+                 <span class="s1">&#39;Q_1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">26000.0</span><span class="p">,</span><span class="mf">2.5</span><span class="p">]),</span>
+                 <span class="s1">&#39;Parameters_interval&#39;</span><span class="p">:{</span><span class="s1">&#39;max&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">50000</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span>
+                                        <span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1000.</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">]),</span>
+                                <span class="p">},</span>
+                 <span class="s1">&#39;tolerance&#39;</span><span class="p">:</span> <span class="mf">1.e-1</span><span class="p">,</span>
+                 <span class="s1">&#39;max_iter&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="s1">&#39;max_iter_step&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+                 <span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span>
+                 <span class="s1">&#39;armijo_step&#39;</span><span class="p">:</span><span class="mf">2.3</span><span class="p">,</span>
+                 <span class="s1">&#39;regulization&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1e-30</span><span class="p">,</span><span class="mf">1e-30</span><span class="p">,</span><span class="mf">1e-30</span><span class="p">,</span><span class="mf">1e-30</span><span class="p">,</span><span class="mf">1e-30</span><span class="p">]),</span>
+                 <span class="s1">&#39;gradient_scaling&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">900</span><span class="p">,</span><span class="mi">5000</span><span class="p">,</span><span class="mi">5000</span><span class="p">,</span><span class="mi">5000</span><span class="p">,</span><span class="mi">5000</span><span class="p">]),</span>
+                                
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>Q_0</strong> and <strong>Q_1</strong> are the first and second initial guess allowing the two-point estimation of partial derivatives</p></li>
+<li><p><strong>tolerance</strong> is indicating the stoping condition given by the residue</p></li>
+<li><p><strong>max_iter</strong> is the maximum number of gradient descent iterations</p></li>
+<li><p><strong>max_iter_step</strong> is the maximum number of the backtracking line search iterations</p></li>
+<li><p><strong>step</strong> is the value of the step of the gradient descent convergeance</p></li>
+<li><p><strong>armijo_step</strong> is the coefficient of the backtracking line search</p></li>
+<li><p><strong>gradient_scaling</strong> are the coefficients to scale the gradient magnitude</p></li>
+<li><p><strong>regulization</strong> are the coefficients related respectively to the parameter set in order to regulize the cost function</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-module.Gradient_descent">
+<span id="gradient-descent-module"></span><h2>Gradient descent module<a class="headerlink" href="#module-module.Gradient_descent" title="Permalink to this headline">¶</a></h2>
+<p>This is a proposed minimization algorithm for the fitting of the heat source parameters i.e Goldak model in the welding process simulation. 
+The model is simulated by Abaqus CAE and the temperature profiles are driven from the obtained Abaqus odb. 
+The temperature profiles are then compared to to the target profiles and the dependent cost function is minimized using this proposed optimization algorithm. 
+In fact, it is the gradient descent algorithm using the backtracking line search based on the <strong>Armijo_Goldstein condition</strong> in order to determine the step. For more detail about this method one can consult the fllowing wikipedia page: <a class="reference external" href="https://en.wikipedia.org/wiki/Backtracking_line_search">here</a>.</p>
+<p>The following draft summerrize the used implementation of both the gradient descent and it searching algorithm for the step.</p>
+<div class="align-center figure" id="id9">
+<img alt="The implemeted gradient descent algorithm" src="file:///home/you/Documents/Master%20thesis/test/code/module/img/gradient_0.PNG" />
+<p class="caption"><span class="caption-text">The implemeted gradient descent algorithm. <strong>Left loop</strong> for the backtracking line search. <strong>Right loop</strong> describing the gradient descent implementation overview.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+<div class="section" id="requirements-and-imports">
+<h3>Requirements and imports<a class="headerlink" href="#requirements-and-imports" title="Permalink to this headline">¶</a></h3>
+<p>The following libraries need to be imported into this module:</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>One can use ‘setup.py’ file for installing the requirements.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>it is not yet done!</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">shutil</span> 
+<span class="kn">import</span> <span class="nn">subprocess</span>       
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">savetxt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="o">&amp;</span>
+<span class="kn">import</span> <span class="nn">config</span> <span class="k">as</span> <span class="nn">cfg</span>
+</pre></div>
+</div>
+<p>The Config module is used as a configuration file for the usage of this optimizer. it will be explained later on the next section how one can use the calibration tool using the config.py file and few instructions to know.</p>
+</div>
+<div class="section" id="performance">
+<h3>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h3>
+<p>This section describe the used methids to optimize the presented tool.</p>
+<div class="section" id="time-module">
+<h4>Time module<a class="headerlink" href="#time-module" title="Permalink to this headline">¶</a></h4>
+<p>The time() method of the imported time module is used to measure the elapsed time in seconds as floating-point number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; start_time = time.time()
+&gt;&gt;&gt; Some running script!
+&gt;&gt;&gt; end_time = time.time()
+&gt;&gt;&gt; elapsed_time = end_time - start_time
+&gt;&gt;&gt; print(&quot;Elapsed time to converge &quot;+str(elapsed_time)+&quot; seconds in &quot;+str(total_iter)+&quot; total iterations. The search for descent direction took &quot;+str(count)+&quot; in &quot; +str(iter)+&quot; main iterations &quot;)
+</pre></div>
+</div>
+</div>
+<div class="section" id="parallel-computing">
+<h4>Parallel computing<a class="headerlink" href="#parallel-computing" title="Permalink to this headline">¶</a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In this module version no parallelisation was implemented.</p>
+</div>
+<p>In the coming versions, there would be a possibility of parallelizing in the following bullet points for instance:</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>The Abaqus job submission.</p></li>
+<li><p>The extraction of the temperature profiles.</p></li>
+<li><p>The searching algorithm for the optimal step e.g Bisection method.</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="inputs">
+<h3>Inputs<a class="headerlink" href="#inputs" title="Permalink to this headline">¶</a></h3>
+<p>The inputs are imported from the <cite>config</cite> module and structured in six groups:</p>
+<ul class="simple">
+<li><p>Directories like the source code path, abaqus files path or target file path</p></li>
+<li><p>Pre processing parameters like the name of the parameters to calibrate and their respective position line</p></li>
+<li><p>Abaqus inputs regarding the welding process parameters like the welding speed or the welding simulation time</p></li>
+<li><p>Post processing parameters like the number of the measurement positions, their coordinates and the number of frames to be extracted</p></li>
+<li><p>Gradient descent algorithm settings like initial parameter set, their interval, tolerance of the square absolute error, the step, etc</p></li>
+<li><p>Outputs files and paths to store results and check simulation state for instance</p></li>
+</ul>
+<p>For more details about the <cite>configuration</cite> file one can check the following link:</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>config module</p>
+</div>
+<p>The following code snipet is representing the input aquisition according to the <a href="#id2"><span class="problematic" id="id3">`</span></a>configuration’ module settings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">###########################################################</span>
+<span class="c1">################## Parameters to set ######################</span>
+<span class="c1">###########################################################</span>
+<span class="n">directory</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s2">&quot;main&quot;</span><span class="p">]</span>
+
+<span class="c1">#abaqus script</span>
+<span class="n">odb_dir</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;odb_folder&#39;</span><span class="p">]</span>
+<span class="n">path_odb_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">odb_dir</span><span class="p">)</span>
+
+<span class="n">scripts</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;code_folder&#39;</span><span class="p">]</span>
+<span class="n">script_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">scripts</span><span class="p">)</span>
+
+<span class="n">results_folder</span> <span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;results_folder&#39;</span><span class="p">]</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">results_folder</span><span class="p">)</span>
+<span class="c1">#########################################################################</span>
+<span class="c1">###############################modules###################################</span>
+<span class="c1">#########################################################################</span>
+
+<span class="c1">#update module</span>
+<span class="n">update_module</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;modules&#39;</span><span class="p">][</span><span class="s1">&#39;update_module&#39;</span><span class="p">]</span>
+<span class="n">update_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">update_module</span><span class="p">)</span>
+
+<span class="c1">#visualization module</span>
+<span class="n">Plot_module</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;modules&#39;</span><span class="p">][</span><span class="s1">&#39;Plot_module&#39;</span><span class="p">]</span>
+<span class="n">Plot_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">Plot_module</span><span class="p">)</span>
+
+<span class="c1">#visualization module</span>
+<span class="n">Abaqus_module</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;modules&#39;</span><span class="p">][</span><span class="s1">&#39;Abaqus_module&#39;</span><span class="p">]</span>
+<span class="n">Abaqus_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">Abaqus_module</span><span class="p">)</span>
+
+<span class="c1">#extraction of profiles</span>
+<span class="n">Extract</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;modules&#39;</span><span class="p">][</span><span class="s1">&#39;extraction_module&#39;</span><span class="p">]</span>
+<span class="n">Extract_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">Extract</span><span class="p">)</span>
+
+<span class="c1">#########################################################################</span>
+<span class="c1">###############################Results###################################</span>
+<span class="c1">#########################################################################</span>
+
+<span class="c1">#Loss_list</span>
+<span class="n">Loss_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;Loss_list&#39;</span><span class="p">]</span>
+<span class="c1">#Profiles_list</span>
+<span class="n">Profiles_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;Profiles_list&#39;</span><span class="p">]</span>
+<span class="c1">#Q_list</span>
+<span class="n">Q_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;Q_list&#39;</span><span class="p">]</span>
+<span class="c1">#delta_list</span>
+<span class="n">delta_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;delta_list&#39;</span><span class="p">]</span>
+<span class="c1">#step_list</span>
+<span class="n">step_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;step_list&#39;</span><span class="p">]</span>
+<span class="c1">#gradient_list</span>
+<span class="n">gradient_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;gradient_list&#39;</span><span class="p">]</span>
+<span class="c1">#error_list</span>
+<span class="n">error_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;error_list&#39;</span><span class="p">]</span>
+<span class="c1">#error_abs_list</span>
+<span class="n">error_abs_list_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;Results&#39;</span><span class="p">][</span><span class="s1">&#39;error_abs_list&#39;</span><span class="p">]</span>
+
+<span class="c1">###########################################################################</span>
+<span class="c1">###########################################################################</span>
+
+<span class="c1">#state file and profile files</span>
+<span class="n">state_file</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;state_file&#39;</span><span class="p">]</span>
+<span class="n">state_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">state_file</span><span class="p">)</span>
+
+<span class="c1">#path to simulation output</span>
+<span class="n">profiles_file</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">output</span><span class="p">[</span><span class="s1">&#39;export_file&#39;</span><span class="p">]</span>
+<span class="n">report_file</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">profiles_file</span><span class="p">)</span><span class="c1">#exporting data to a created text file</span>
+
+<span class="c1">#values of parameters for step 1&amp;2</span>
+<span class="n">Q_step1</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;Q_0&#39;</span><span class="p">]</span>
+<span class="n">Q_step2</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;Q_1&#39;</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q_step1</span><span class="p">)</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">Q_step1</span><span class="p">),</span> <span class="s1">&#39;The inputs should be of the same shape!&#39;</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q_step1</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;The inputs shape should contains 5 value at maximum!&#39;</span>
+
+<span class="n">nb_col_profiles</span> <span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">post_Abaqus</span><span class="p">[</span><span class="s2">&quot;extracted_columns&quot;</span><span class="p">]</span><span class="o">+</span><span class="mi">3</span><span class="c1">#number of evaluated degrees+3</span>
+<span class="c1">#path to the target profiles</span>
+<span class="n">targets_file</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">directories</span><span class="p">[</span><span class="s1">&#39;target_file&#39;</span><span class="p">]</span>
+<span class="n">targets_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span><span class="n">targets_file</span><span class="p">)</span>
+
+<span class="c1">###########################################################</span>
+<span class="c1">##################adapt to dimension#######################</span>
+<span class="c1">###########################################################</span>
+<span class="n">dimension</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Q_step1</span><span class="p">)</span> 
+<span class="n">maximum_par</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;Parameters_interval&#39;</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+<span class="n">minimum_par</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;Parameters_interval&#39;</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+
+<span class="c1">#########################################################################</span>
+<span class="c1">#########################Gradient parameters#############################</span>
+<span class="c1">#########################################################################</span>
+
+<span class="c1">################################################################</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;tolerance&#39;</span><span class="p">]</span>
+<span class="n">max_iter</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;max_iter&#39;</span><span class="p">]</span>
+<span class="n">max_iter_step</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;max_iter_step&#39;</span><span class="p">]</span>
+<span class="n">step</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span>
+<span class="n">gradient_scaling</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;gradient_scaling&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+<span class="n">regulization</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;regulization&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+<span class="n">armijo_step</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;armijo_step&#39;</span><span class="p">]</span>
+
+<span class="c1">################################################################</span>
+
+<span class="c1">###########################################################################</span>
+<span class="c1">###########################################################################</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="module.Gradient_descent.Abaqus">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Abaqus</code><span class="sig-paren">(</span><em class="sig-param">Q</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Abaqus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the Abaqus user subroutine using <cite>modify_Q_in_f()</cite> method in order to run a shell command using the method subprocess.call() as if we would run the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python Abaqus_module.py
+</pre></div>
+</div>
+<p>The module <cite>Abaqus_module</cite> is described within the next sections and has the main goal to submit the Abaqus analysis on the cluster for each iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Abaqus</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`The Abaqus job is lunched successfully!`
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.Extract">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Extract</code><span class="sig-paren">(</span><em class="sig-param">Q</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Extract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calling the <cite>Gradient_descent.plot_profile()</cite> method after running the post processing phase using <cite>Postprocessing_module</cite> via a shell command using the method subprocess.call() as if we would run the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python Postprocessing_module.py
+</pre></div>
+</div>
+<p>The module <cite>Postprocessing_module</cite> is described within the next sections and has the main goal to extract the temperature profiles from the Abaqus model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Extract</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Temperature profiles</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy::array</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.Gradient_Loss">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Gradient_Loss</code><span class="sig-paren">(</span><em class="sig-param">L1</em>, <em class="sig-param">Q1</em>, <em class="sig-param">Q2</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Gradient_Loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the gradient of the cost function estimated two initial parameter set.
+The partial derivatives are approximated by backward difference.</p>
+<p>Given the direction and the orthogonal basis:</p>
+<div class="math notranslate nohighlight">
+\[h^i = (0,..,h_i,...,0) \, , e_{i \in (1,..,n)} \]</div>
+<p>With:</p>
+<div class="math notranslate nohighlight">
+\[h_i =  &lt;Q_2-Q_1 , e_i&gt;_{R^n}\]</div>
+<p>We approximate the partial derivatives of J(x0,…,xi,…,xn) by backward difference as follows:</p>
+<div class="math notranslate nohighlight">
+\[\partial_{x_i} J = \frac{J(Q_1 + h^i) - J(Q_1)}{h_i}\]</div>
+<p>For more explanations one can check the following wikipedia pages: <a class="reference external" href="https://en.wikipedia.org/wiki/Partial_derivative">here</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Derivative">here</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When Q1 is equal to Q2 a default value of the gradient is set in the method. It can be changed in follwing line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">Q1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">Q2</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">grad</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">2.1</span><span class="p">,</span><span class="mf">3.1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Targets</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Load_profile</span><span class="p">(</span><span class="n">targets_file</span><span class="p">,</span><span class="n">nb_col_profiles</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L1</span><span class="p">,</span><span class="n">profile1</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Loss_calc</span><span class="p">(</span><span class="n">Q1</span><span class="p">,</span><span class="n">Targets</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grad</span> <span class="o">=</span> <span class="n">Gradient_Loss</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span><span class="n">Q1</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L1</strong> (<em>numpy::array</em>) – The value of the cost function on the initial parameter set</p></li>
+<li><p><strong>Q1</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the initial parameter set</p></li>
+<li><p><strong>Q2</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the neighbouring second guess parameter set</p></li>
+<li><p><strong>target</strong> (<em>numpy::array</em>) – The target temperature profile</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the cost function on the initial parameter set</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float,numpy::array)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.Gradient_descent">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Gradient_descent</code><span class="sig-paren">(</span><em class="sig-param">tol</em>, <em class="sig-param">max_iter</em>, <em class="sig-param">max_iter_step</em>, <em class="sig-param">step</em>, <em class="sig-param">armijo_step</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Gradient_descent" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method is an implementation of the Gradient descent which is a first-order iterative optimization algorithm for finding a local minimum of a differentiable function. The idea is to take repeated steps in the opposite direction of the approximate gradient. For more explanations one can check the following wikipedia pages: <a class="reference external" href="https://en.wikipedia.org/wiki/Gradient_descent.">here</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tol</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;tolerance&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;max_iter&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">max_iter_step</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;max_iter_step&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">step</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gradient_scaling</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;gradient_scaling&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">regulization</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;regulization&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">armijo_step</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;armijo_step&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">iters</span><span class="p">,</span><span class="n">total_iter</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Gradient_descent</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span><span class="n">max_iter</span><span class="p">,</span><span class="n">max_iter_step</span><span class="p">,</span><span class="n">step</span><span class="p">,</span><span class="n">armijo_step</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tol</strong> (<em>float</em>) – This is indicating the stoping condition given by the residue</p></li>
+<li><p><strong>max_iter</strong> (<em>integer</em>) – The maximum number of gradient descent iterations</p></li>
+<li><p><strong>max_iter_step</strong> – The maximum number of the backtracking line search iterations</p></li>
+<li><p><strong>step</strong> (<em>float</em>) – The value of the step of the gradient descent convergeance</p></li>
+<li><p><strong>armijo_step</strong> (<em>float</em>) – The coefficient of the backtracking line search</p></li>
+<li><p><strong>gradient_scaling</strong> (<em>numpy::array</em>) – The coefficients to scale the gradient magnitude</p></li>
+<li><p><strong>regulization</strong> (<em>numpy::array</em>) – The coefficients related respectively to the parameter set in order to regulize the cost function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a tuple (number  of iteration, total number of iterations including the backtracking line search iterations)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(integer,interger)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.Load_profile">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Load_profile</code><span class="sig-paren">(</span><em class="sig-param">targets_file</em>, <em class="sig-param">nb_col_profiles</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Load_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the temperature profiles of the target measurements as a numpy array.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The first three returned columns contains the coordinates of each position of the temperature sensor.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Targets</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Load_profile</span><span class="p">(</span><span class="n">targets_file</span><span class="p">,</span><span class="n">nb_col_profiles</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The target profile has the following shape: &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">Targets</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.The linesrepresenting different position of measurements!The first 3 columns representing the temperature measurements coordinates!The other columns representing the temperature value for different time frames!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>targets_file</strong> (<em>string</em>) – Absolute path to the target file</p></li>
+<li><p><strong>nb_col_profiles</strong> (<em>integer</em>) – Number of columns indicating number of extracted frames from the Abaqus model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A matrix of shape (number of measurements, number of frames)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy::array</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.Loss">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Loss</code><span class="sig-paren">(</span><em class="sig-param">Q</em>, <em class="sig-param">profile</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the cost function expressed as follows:</p>
+<div class="math notranslate nohighlight">
+\[J = ||T_{Simulated} - T_{Target}||_{L_2}^2 + \sum_{i=0}^{n-1} regulization[i]\times||Q[i]||_{L_2}^2\]</div>
+<p>The regulization array is a variable imported from the <cite>config</cite> file in order to regulize the cost function in case of unsettled measurements.</p>
+<p>For information about the mathematical background one can check the following wikipedia page: <a class="reference external" href="https://en.wikipedia.org/wiki/Lp_space">here</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">regulization</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">Gradient_algo</span><span class="p">[</span><span class="s1">&#39;regulization&#39;</span><span class="p">][:</span><span class="n">dimension</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">J</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Loss</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">profile</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set to calibrate of dimension n e.g for n = 5, “QT”,”AF”, “AR”, “B”and “C” have to be fitted</p></li>
+<li><p><strong>profile</strong> (<em>numpy::array</em>) – The obtained simulated temperature profile</p></li>
+<li><p><strong>target</strong> (<em>numpy::array</em>) – The measured target temperature profile</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A scalar</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.Loss_calc">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">Loss_calc</code><span class="sig-paren">(</span><em class="sig-param">Q1</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.Loss_calc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns temperature profiles and the cost function after calling the <cite>Gradient_descent.get_profiles()</cite> method followed by calling <cite>Gradient_descent.Loss()</cite> method.</p>
+<p>The methods are described within this module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Targets</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Load_profile</span><span class="p">(</span><span class="n">targets_file</span><span class="p">,</span><span class="n">nb_col_profiles</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">L</span><span class="p">,</span><span class="n">profile</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">Loss_calc</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">Targets</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p></li>
+<li><p><strong>target</strong> (<em>numpy::array</em>) – The target temperature profile</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple of temperature profiles and the cost function evaluation on the given parameter set</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float,numpy::array)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.get_profiles">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">get_profiles</code><span class="sig-paren">(</span><em class="sig-param">Q</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.get_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Returns temperature profiles after calling the <cite>Gradient_descent.Abaqus()</cite> method followed by calling <cite>Gradient_descent.Extract()</cite> method.</p>
+</div></blockquote>
+<p>The methods are described above within this module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gradient_descent</span><span class="o">.</span><span class="n">get_profiles</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Temperature profiles</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy::array</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.modify_Q_in_f">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">modify_Q_in_f</code><span class="sig-paren">(</span><em class="sig-param">Q</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.modify_Q_in_f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the parameters using <cite>unpackarraytostring()</cite> method in order to run them as a shell first argument using the method subprocess.call() as if we would run the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python update_module.py  Q
+</pre></div>
+</div>
+<p>The module <cite>update_module</cite> is described in the following section and has the main goal to update the abaqus user subroutine file with the new parameter set before running the Abaqus job.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gradient_descent</span><span class="o">.</span><span class="n">modify_Q_in_f</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`Parameters are modified successfully!`
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.plot_profile">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">plot_profile</code><span class="sig-paren">(</span><em class="sig-param">Q</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.plot_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepares the parameters using <cite>unpackarraytostring()</cite> method in order to run them as a shell first argument using the method subprocess.call() as if we would run the following:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python plot_module.py  Q
+</pre></div>
+</div>
+<p>The module <cite>plot_module</cite> is described within the next sections and has the main goal to create a plot of the simulated temperature profiles for each iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Gradient_descent</span><span class="o">.</span><span class="n">plot_profile</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`The profile graph is made successfully!`
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.profile_target_L2">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">profile_target_L2</code><span class="sig-paren">(</span><em class="sig-param">profile</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.profile_target_L2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the square of the L2 norm of the difference between the simulated temperature profile and the targeted measured temperature profile. The Temperature profile is time dependant over the welding process and measured in several positions. The return value is calculated based on the following expression:</p>
+<div class="math notranslate nohighlight">
+\[||Profile_{Simulated} - Profile_{Target}||_{L_2}^2 = \int_{t=0}^{Max} (Profile_{Simulated} - Profile_{Target})^2 dt \]</div>
+<p>Which is estimated using the rectangle rule:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^{Frames} (T_{Simulated}[:,i] - T_{Target}[:,i])^2 \]</div>
+<p>This is implemented method to estimate the integral is described in the following wikipedia page: <a class="reference external" href="https://en.wikipedia.org/wiki/Numerical_integration">here</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">L2</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">profile_target_L2</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span><span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>profile</strong> (<em>numpy::array</em>) – The obtained simulated temperature profile</p></li>
+<li><p><strong>target</strong> (<em>numpy::array</em>) – The measured target temperature profile</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A scalar</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.save_results">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">save_results</code><span class="sig-paren">(</span><em class="sig-param">Q_list</em>, <em class="sig-param">Loss_list</em>, <em class="sig-param">Profiles_list</em>, <em class="sig-param">step_list</em>, <em class="sig-param">gradient_list</em>, <em class="sig-param">delta_list</em>, <em class="sig-param">error_list</em>, <em class="sig-param">error_abs_list</em>, <em class="sig-param">ok=True</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.save_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the relevant output data to txt files eventually for each iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">save_results</span><span class="p">(</span><span class="n">Q_list</span><span class="p">,</span><span class="n">Loss_list</span><span class="p">,</span><span class="n">Profiles_list</span><span class="p">,</span><span class="n">step_list</span><span class="p">,</span><span class="n">gradient_list</span><span class="p">,</span><span class="n">delta_list</span><span class="p">,</span><span class="n">error_list</span><span class="p">,</span><span class="n">error_abs_list</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`The outputs data is saved successfully!`
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q_list</strong> (<em>list</em>) – A list of n-ary vecteur representing the parameter set for each iteration</p></li>
+<li><p><strong>Loss_list</strong> (<em>list</em>) – A list of the obtained value of the cost function for each iteration</p></li>
+<li><p><strong>Profiles_list</strong> (<em>list</em>) – A list of the obtained simulated temperature profiles for each iteration</p></li>
+<li><p><strong>step_list</strong> (<em>list</em>) – A list of the found steps for each iteration</p></li>
+<li><p><strong>gradient_list</strong> (<em>list</em>) – A list of the numerical gradients for each iteration</p></li>
+<li><p><strong>delta_list</strong> (<em>list</em>) – A list of the difference between the new and the old value of the cost function for each iteration</p></li>
+<li><p><strong>error_abs_list</strong> (<em>list</em>) – A list of the L2 norm of the simulated and targetted temperature profiles for each iteration</p></li>
+<li><p><strong>ok</strong> (<em>bool</em>) – A boolean indicating if the obtained parameter set and cost function value should be saved or not. Default is <cite>True</cite> for saving all.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="module.Gradient_descent.unpackarraytostring">
+<code class="sig-prename descclassname">module.Gradient_descent.</code><code class="sig-name descname">unpackarraytostring</code><span class="sig-paren">(</span><em class="sig-param">Q</em>, <em class="sig-param">space=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#module.Gradient_descent.unpackarraytostring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes an array as a first argument and return a string containing the same elements of the array seperated by the second argument e.g space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Q</span> <span class="o">=</span> <span class="n">Gradient_descent</span><span class="o">.</span><span class="n">unpackarraytostring</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`1_2_3`
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Q</strong> (<em>numpy::array</em>) – The n-ary vecteur representing the parameter set for instance</p></li>
+<li><p><strong>space</strong> (<em>string</em>) – Seperation string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-module.update_module">
+<span id="preprocessing-module"></span><h2>Preprocessing module<a class="headerlink" href="#module-module.update_module" title="Permalink to this headline">¶</a></h2>
+<p>In order to run Abaqus jobs with new parameter set, the user subroutine file has to changed. Also, the job directory (here named <cite>test</cite> folder) is cleaned and all files are deleted except the job required input files.</p>
+</div>
+<div class="section" id="module-module.Abaqus_module">
+<span id="processing-module"></span><h2>Processing module<a class="headerlink" href="#module-module.Abaqus_module" title="Permalink to this headline">¶</a></h2>
+<p>This module allow the Abaqus job submission with the task to send a signal when the job is done.</p>
+</div>
+<div class="section" id="module-module.Extract_module">
+<span id="postrocessing-module"></span><h2>Postrocessing module<a class="headerlink" href="#module-module.Extract_module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="lunching-the-job">
+<h3>Lunching the job<a class="headerlink" href="#lunching-the-job" title="Permalink to this headline">¶</a></h3>
+<p>This module allow the extraction phase to be lunched via the module below and send a signal when the extraction is done.</p>
+</div>
+<span class="target" id="module-module.Postprocessing_module"></span><div class="section" id="abaqus-viewer">
+<h3>Abaqus Viewer<a class="headerlink" href="#abaqus-viewer" title="Permalink to this headline">¶</a></h3>
+<p>This module allow the communication with Abaqus Viewer in order to extract the temperature profiles according to the given postprocessing settings in the config module.</p>
+</div>
+</div>
+<div class="section" id="module-module.Plot_module">
+<span id="visualization-module"></span><h2>Visualization module<a class="headerlink" href="#module-module.Plot_module" title="Permalink to this headline">¶</a></h2>
+<p>This module allow the creation of graphs of the temperature profiles for each iteration of the optimization process.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Abacal tool package</a><ul>
+<li><a class="reference internal" href="#module-module.config">Configuration module</a><ul>
+<li><a class="reference internal" href="#paths-of-input-and-ouput-files">Paths of input and ouput files</a></li>
+<li><a class="reference internal" href="#preprocessing-settings">Preprocessing settings</a></li>
+<li><a class="reference internal" href="#abaqus-processing-settings">Abaqus processing settings</a></li>
+<li><a class="reference internal" href="#postprocessing-settings">Postprocessing settings</a></li>
+<li><a class="reference internal" href="#gradient-descent-algorithm-settings">Gradient descent algorithm settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-module.Gradient_descent">Gradient descent module</a><ul>
+<li><a class="reference internal" href="#requirements-and-imports">Requirements and imports</a></li>
+<li><a class="reference internal" href="#performance">Performance</a><ul>
+<li><a class="reference internal" href="#time-module">Time module</a></li>
+<li><a class="reference internal" href="#parallel-computing">Parallel computing</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inputs">Inputs</a></li>
+<li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-module.update_module">Preprocessing module</a></li>
+<li><a class="reference internal" href="#module-module.Abaqus_module">Processing module</a></li>
+<li><a class="reference internal" href="#module-module.Extract_module">Postrocessing module</a><ul>
+<li><a class="reference internal" href="#lunching-the-job">Lunching the job</a></li>
+<li><a class="reference internal" href="#abaqus-viewer">Abaqus Viewer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-module.Plot_module">Visualization module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Abacal’s documentation!</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/module.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Abacal’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Abacal 0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Youness-elh.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.0.
+    </div>
+  </body>
+</html>
